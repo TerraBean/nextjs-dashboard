@@ -9,6 +9,8 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { unstable_noStore } from 'next/cache';
+import { log } from 'console';
 
 export async function fetchRevenue() {
   // Add noStore() here prevent the response from being cached.
@@ -24,8 +26,11 @@ export async function fetchRevenue() {
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
     // console.log('Data fetch completed after 3 seconds.');
-
+    
+    
     return data.rows;
+   
+    
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch revenue data.');
@@ -40,7 +45,8 @@ export async function fetchLatestInvoices() {
       JOIN customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
       LIMIT 5`;
-
+      console.log('My dataaaa',data);
+      
     const latestInvoices = data.rows.map((invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
