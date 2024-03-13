@@ -1,5 +1,12 @@
 'use client'
 
+
+import { generatePagination } from "@/app/lib/utils";
+import CustomerPagination from "@/app/ui/customers/customer-pagination";
+import { InvoicesTable } from "@/app/ui/customers/customer-table";
+import SearchInput from "@/app/ui/search-input";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 
@@ -11,27 +18,19 @@ export default function Page({searchParams}:{
         current?:string;
     }
 }){
+    const query = searchParams?.query || ''
+    const currentPage = Number(searchParams?.current) || 1
 
-    const searchParameters = useSearchParams()
-    const pathName = usePathname()
-    const {replace}= useRouter()
-
-    function handleChange(term:string){
-        const params = new URLSearchParams(searchParameters)
-        if(term){
-            params.set('query',term)
-            params.set('current','customer')
-        }else{
-            params.delete('query')
-            params.delete('current')
-        }
-        replace(`${pathName}?${params.toString()}`)
-    }
     return (
         <>
-            <input type="text" onChange={(e)=>{
+            {/* <input type="text" onChange={(e)=>{
                 handleChange(e.target.value)
-            }} />
+            }} /> */}
+
+            <SearchInput placeholder='Search invoices..' />
+            <InvoicesTable currentPage={currentPage} query={query} />
+            <CustomerPagination />
         </>
     )
 }
+
